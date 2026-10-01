@@ -63,7 +63,9 @@ class BioFlyDashboard:
         self.brain.eval()
 
         # Agent control mode: 'rl', 'reflex', 'manual'
-        self.control_mode = "rl"
+        # Default to 'reflex' (Biological Heuristic) if no trained model is loaded,
+        # otherwise the untrained RL network will just crash randomly.
+        self.control_mode = "rl" if model_path else "reflex"
         self.paused = False
         self.episodes = 0
         self.cumulative_reward = 0.0
@@ -162,9 +164,11 @@ class BioFlyDashboard:
             pitch_cmd = np.clip(gap_rel_y * 1.5, -0.8, 0.8)
 
             # Looming escape jump
-            if looming > 0.4:
-                flap_cmd += 0.5
-                pitch_cmd += 0.3
+            if looming > 0.35:
+                # Saccade strongly towards the safe gap direction
+                direction = 1.0 if gap_rel_y > 0 else -1.0
+                flap_cmd = np.clip(flap_cmd + direction * 0.7, -1.0, 1.0)
+                pitch_cmd = np.clip(pitch_cmd + direction * 0.4, -1.0, 1.0)
 
             return np.array([flap_cmd, pitch_cmd], dtype=np.float32)
 
