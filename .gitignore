@@ -1,0 +1,25 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+env/
+venv/
+.venv/
+build/
+dist/
+*.egg-info/
+
+# Checkpoints and models
+checkpoints/
+logs/
+*.zip
+*.pt
+*.pth
+
+# IDE and OS
+.vscode/
+.idea/
+.DS_Store
+*.swp
